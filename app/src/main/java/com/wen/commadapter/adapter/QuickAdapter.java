@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.wen.commadapter.R;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -124,7 +126,13 @@ public abstract class QuickAdapter<T> extends BaseAdapter {
         // 如果是多条目，viewType就是布局ID
         View view;
         if (mSupport != null) {
+            Object tagPosition = parent.getTag(R.id.view_position);
             int layoutId = mSupport.getLayoutId(mData.get(mPosition));
+            // 如果是滚动布局
+            if (tagPosition != null) {
+                int position = (int) tagPosition;
+                layoutId = mSupport.getLayoutId(mData.get(position));
+            }
             view = LayoutInflater.from(mContext).inflate(layoutId, parent, false);
         } else {
             view = LayoutInflater.from(mContext).inflate(mLayoutId, parent, false);

@@ -7,10 +7,12 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.wen.commadapter.adapter.QuickAdapter;
 import com.wen.commadapter.adapter.QuickMultiSupport;
 import com.wen.commadapter.adapter.QuickViewHolder;
+import com.wen.commadapter.stack.IStick;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -93,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(new CommAdapter(this, mData, mQuickSupport));
     }
 
-    class CommAdapter extends QuickAdapter<IViewType> {
+    class CommAdapter extends QuickAdapter<IViewType> implements IStick {
         public CommAdapter(Context context, List<IViewType> data, int layoutId) {
             super(context, data, layoutId);
         }
@@ -103,15 +105,28 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        protected void convert(QuickViewHolder holder, IViewType item, final int position) {
+        protected void convert(QuickViewHolder holder, final IViewType item, final int position) {
             holder.setText(R.id.tv, item.toString());
             holder.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     // 点击移除当前条目
-                    remove(position);
+                    Toast.makeText(MainActivity.this, item.toString(), Toast.LENGTH_LONG).show();
                 }
             });
+        }
+
+        // 下面是悬浮View的测试
+        @Override
+        public int getStickPosition() {
+            // 指定第10个位置要悬浮
+            return 10;
+        }
+
+        @Override
+        public int getStickViewType() {
+            // 指定悬浮的条目类型
+            return getItemViewType(getStickPosition());
         }
     }
 }
